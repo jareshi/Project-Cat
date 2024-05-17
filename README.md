@@ -1,4 +1,4 @@
-# Project Cat
+# *Project Cat*
 
 ## Intro
 Hello everyone! This is one of my first projects, at least the first solo project that I will putting up on GitHub as a Public repo from the start.
@@ -12,11 +12,13 @@ I have always wanted to write a text-based RPG, and have written some before in 
 ## Dedication
 I am dedicating this project to my younger brother, he is one of the best things to have ever happened to me. I hope that he gets to play and enjoy this game one day. He also really likes cats.
 
-
+---
     _                ___       _.--.
     \`.|\..----...-'`   `-._.-'_.-'`
     /  ' `         ,       __.--'
     )/' _/     \   `-_,   /
     `-'" `"\_  ,_.-;_.-\_ ',     
         _.-'_./   {_.'   ; /
-       {_.-``-'         {_/
+       {_.-``-'         {_/  project cat by jareshi
+
+For guides on how to initialize this project on your own machine, please refer to the wiki. I will make sure to regularly update the documentation there. Thank you!!
