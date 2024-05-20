@@ -26,15 +26,14 @@ def LLM_generation(adventurerHistory, adventurerQuery):
         decisions. Your goal is to create a branching narrative experience where each
         choice leads to a new path, ultimately determining {adventurer.name}'s fate.\n
         """
-
+        
         adventureTemplate = adventureText + """
-
         Here are some rules to follow:
         1. Have a few paths that lead to success
         2. Have a few paths that lead to death. If the adventurer dies generate a response that explains the death and ends in the text: "The End.", I will search for this text to end the game
-        3. There are only a few monsters that can be encountered, they are the following: goblin, fire drake, ogre, giant spider, and shadow mage
+        3. There are only a few monsters that can be encountered, they are the following: goblin, fire drake, ogre, giant spider, and shadow mage, during an encounter, generate a response that says "You have encountered a..." and include the name of one of the aforementioned monsters, I will search for this text to start a battle
         4. If the adventurer's health reaches 0, generate a response that explains the death and ends in the text: "The End.", I will search for this text to end the game
-
+        
         Here is the journey so far, use this to understand what to say next: {history}
         Human: {query}
         AI: 
