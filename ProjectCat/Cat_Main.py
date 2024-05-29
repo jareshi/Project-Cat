@@ -44,8 +44,9 @@ print(intro_ASCII)
 print("Welcome to the region of Wolfspine. What is your name?")
 
 adventurerName = str(input())
-print("What is your class (please enter 1-6)?")
-print("1. Warrior\n2. Mage\n3. Rogue\n4. Paladin\n5. Cleric\n6. Ranger")
+print("What is your class?")
+print("1. Warrior\n2. Mage\n3. Rogue\n4. Paladin\n5. Cleric\n6. Ranger\n")
+print("Enter the number corresponding to your class: ")
 
 # Setting randomized stats based on class
 while(True):
@@ -133,8 +134,8 @@ Weapon: {adventurer.weapon.name}\n\
 
 print("\n\nLet's start the adventure!")
 
-adventurerHistory = []
-action = f"{adventurer.name}, a {adventurer.characterClass}, has just left their home to embark on a journey."
+adventurerHistory = [f"{adventurer.name}, a {adventurer.characterClass}, has finally gotten their Adventure License! They can now embark on a journey. They gather the needed supplies, and are ready to go."]
+action = f"{adventurer.name} has just left their home to embark on a journey."
 path = LLM_generation(adventurerHistory, action)
 path = path.strip()
 adventurerHistory.append(path)

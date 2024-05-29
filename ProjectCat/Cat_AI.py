@@ -9,6 +9,7 @@ from langchain_community.embeddings import OllamaEmbeddings # This is for creati
 from langchain_core.prompts import ChatPromptTemplate # This is a template that will be used for prompting the AI
 from langchain_core.runnables import RunnablePassthrough # To feed the AI the input
 from langchain_core.output_parsers import StrOutputParser # To receive the output as a string
+import logging
 
 from monsters import elementalDragon
 
@@ -24,6 +25,9 @@ def LLM_generation(adventurerHistory, adventurerAction):
     Returns:
     str: The AI's response to the adventurer's query
     """
+
+    logging.basicConfig(level=logging.ERROR)
+    
     try:
         # Uses Nomic-Embed-Text-v1.5 to embed the history in the Chroma DB as vectors
         historyVector = Chroma.from_texts(
@@ -50,7 +54,7 @@ def LLM_generation(adventurerHistory, adventurerAction):
         Here are some rules to follow:
         1. Have a few paths that lead to success. If the adventurer wins against the elemental dragon, generate a response that explains the victory and ends in the text: "You have won". We will search for this text to end the game.
         2. Have a few paths that lead to death. If the adventurer dies, generate a response that explains the death and ends in the text: "You have died". We will search for this text to end the game.
-        3. There are only a few monsters that can be encountered, they are the following: goblin, fire drake, ogre, giant spider, and shadow mage. During an encounter, generate a response that says "You have encountered a..." and include the name of one of the aforementioned monsters. We will search for this text to start a battle.
+        3. There are only a few monsters that can be encountered, they are the following: goblin, fire drake, ogre, giant spider, and shadow mage. During an encounter, generate a response that says "You have encountered a..." and include the name of one of the aforementioned monsters. We will search for this text to start a battle. In this case, only give the adventurer the choice to fight or run.
         4. If the adventurer's health reaches 0, generate a response that explains the death and ends in the text: "You have died". We will search for this text to end the game.
         
         Here is the journey so far, use this to understand what to say next: {history}
@@ -63,7 +67,7 @@ def LLM_generation(adventurerHistory, adventurerAction):
 
         # Create a chain of operations that will be applied to the adventurer's query
         chain = (
-            {"history": historyVector, "query": RunnablePassthrough()}
+            {"history": historyVector.as_retriever(), "query": RunnablePassthrough()}
             | prompt
             | localModel
             | StrOutputParser()
