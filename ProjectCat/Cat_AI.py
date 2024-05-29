@@ -13,7 +13,7 @@ from langchain_core.output_parsers import StrOutputParser # To receive the outpu
 from Cat_Main import adventurer
 from monsters import elementalDragon
 
-def LLM_generation(adventurerHistory, adventurerQuery):
+def LLM_generation(adventurerHistory, adventurerAction):
     """
     This function uses the Ollama model to generate paths for the adventurer to follow based
     on the decisions that they make. It also sets the rules for the AI to follow.
@@ -43,10 +43,10 @@ def LLM_generation(adventurerHistory, adventurerQuery):
         # Create the adventure template that will be used by the AI to generate responses
         adventureTemplate = adventureText + """
         Here are some rules to follow:
-        1. Have a few paths that lead to success
-        2. Have a few paths that lead to death. If the adventurer dies, generate a response that explains the death and ends in the text: "The End". We will search for this text to end the game.
+        1. Have a few paths that lead to success. If the adventurer wins against the elemental dragon, generate a response that explains the victory and ends in the text: "You have won". We will search for this text to end the game.
+        2. Have a few paths that lead to death. If the adventurer dies, generate a response that explains the death and ends in the text: "You have died". We will search for this text to end the game.
         3. There are only a few monsters that can be encountered, they are the following: goblin, fire drake, ogre, giant spider, and shadow mage. During an encounter, generate a response that says "You have encountered a..." and include the name of one of the aforementioned monsters. We will search for this text to start a battle.
-        4. If the adventurer's health reaches 0, generate a response that explains the death and ends in the text: "The End". We will search for this text to end the game.
+        4. If the adventurer's health reaches 0, generate a response that explains the death and ends in the text: "You have died". We will search for this text to end the game.
         
         Here is the journey so far, use this to understand what to say next: {history}
         Human: {query}
@@ -65,7 +65,7 @@ def LLM_generation(adventurerHistory, adventurerQuery):
         )
 
         # Invoke the chain and return the AI's response
-        return(chain.invoke(adventurerQuery))
+        return(chain.invoke(adventurerAction))
    
     except Exception as e:
         # If there is an error, print the error message
