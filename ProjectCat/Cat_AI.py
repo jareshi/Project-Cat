@@ -25,6 +25,13 @@ def LLM_generation(adventurerHistory, adventurerAction):
     str: The AI's response to the adventurer's query
     """
     try:
+        # Uses Nomic-Embed-Text-v1.5 to embed the history in the Chroma DB as vectors
+        historyVector = Chroma.from_texts(
+            adventurerHistory,
+            collection_name = "history-Chroma",
+            embedding = embeddings.ollama.OllamaEmbeddings(model = 'nomic-embed-text')
+        )
+
         # Set the model to use, in this case, Mistral-7b-Instruct-v0.2
         localModel = Ollama(model = "mistral")
 
@@ -56,7 +63,7 @@ def LLM_generation(adventurerHistory, adventurerAction):
 
         # Create a chain of operations that will be applied to the adventurer's query
         chain = (
-            {"history": adventurerHistory, "query": RunnablePassthrough()}
+            {"history": historyVector, "query": RunnablePassthrough()}
             | prompt
             | localModel
             | StrOutputParser()
