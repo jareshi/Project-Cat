@@ -10,7 +10,6 @@ from langchain_core.prompts import ChatPromptTemplate # This is a template that 
 from langchain_core.runnables import RunnablePassthrough # To feed the AI the input
 from langchain_core.output_parsers import StrOutputParser # To receive the output as a string
 
-from Cat_Main import adventurer
 from monsters import elementalDragon
 
 def LLM_generation(adventurerHistory, adventurerAction):
@@ -32,12 +31,11 @@ def LLM_generation(adventurerHistory, adventurerAction):
         # Separate this from the template so that the variables can be dynamically set
         adventureText = f"""
         You are now the guide of an epic journey in the region of Wolfspine.
-        An adventurer named {adventurer.name}, who is a {adventurer.characterClass},
-        is traveling in search of the legendary beast {elementalDragon.name}.
-        You must navigate the {adventurer.name} through challenges, choices, battles,
+        An adventurer is traveling in search of the legendary beast {elementalDragon.name}.
+        You must navigate the adventurer through challenges, choices, battles,
         and consequences, dynamically adapting the tale based on the adventurer's
         decisions. Your goal is to create a branching narrative experience where each
-        choice leads to a new path, ultimately determining {adventurer.name}'s fate.
+        choice leads to a new path, ultimately determining adventurer's fate.
         """
         
         # Create the adventure template that will be used by the AI to generate responses
