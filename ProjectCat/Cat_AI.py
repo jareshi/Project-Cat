@@ -5,7 +5,7 @@
 # These are the main dependencies.
 from langchain_community.llms import Ollama # This allows the Python code to use Ollama
 from langchain_community.vectorstores import Chroma # This is for the Chroma DB
-from langchain_community import embeddings # This is for creating the embeddings for the Chroma DB
+from langchain_community.embeddings import OllamaEmbeddings # This is for creating the embeddings for the Chroma DB
 from langchain_core.prompts import ChatPromptTemplate # This is a template that will be used for prompting the AI
 from langchain_core.runnables import RunnablePassthrough # To feed the AI the input
 from langchain_core.output_parsers import StrOutputParser # To receive the output as a string
@@ -29,7 +29,7 @@ def LLM_generation(adventurerHistory, adventurerAction):
         historyVector = Chroma.from_texts(
             adventurerHistory,
             collection_name = "history-Chroma",
-            embedding = embeddings.ollama.OllamaEmbeddings(model = 'nomic-embed-text')
+            embedding = OllamaEmbeddings(model = 'nomic-embed-text')
         )
 
         # Set the model to use, in this case, Mistral-7b-Instruct-v0.2
