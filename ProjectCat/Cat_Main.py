@@ -1,9 +1,25 @@
 # This will be the main file that will be used to run the game.
 
+import os
+import sys
 from random import randint
 from Cat_AI import LLM_generation # Importing the LLM generation function
 from datasheet import Character # Importing the character class
 import armory
+
+def set_terminal_size(columns, lines):
+    if os.name == 'nt':  # Windows
+        os.system(f'mode con: cols={columns} lines={lines}')
+    else:  # Unix-based systems (Linux and macOS)
+        sys.stdout.write(f"\x1b[8;{lines};{columns}t")
+        sys.stdout.flush()
+
+# Define the desired console window size
+columns = 160
+lines = 40
+
+# Resize the console window
+set_terminal_size(columns, lines)
 
 intro_ASCII = r"""
  ._       __          ____
@@ -28,8 +44,9 @@ print(intro_ASCII)
 print("Welcome to the region of Wolfspine. What is your name?")
 
 adventurerName = str(input())
-print("What is your class (please enter 1-6)?")
-print("1. Warrior\n2. Mage\n3. Rogue\n4. Paladin\n5. Cleric\n6. Ranger")
+print("What is your class?")
+print("1. Warrior\n2. Mage\n3. Rogue\n4. Paladin\n5. Cleric\n6. Ranger\n")
+print("Enter the number corresponding to your class: ")
 
 # Setting randomized stats based on class
 while(True):
@@ -117,12 +134,69 @@ Weapon: {adventurer.weapon.name}\n\
 
 print("\n\nLet's start the adventure!")
 
-adventurerHistory = []
-adventurerQuery = f"{adventurer.name} has just left their home to embark on a journey."
-path = LLM_generation(adventurerHistory, adventurerQuery)
+adventurerHistory = [f"{adventurer.name}, a {adventurer.characterClass}, has finally gotten their Adventure License! They can now embark on a journey. They gather the needed supplies, and are ready to go."]
+action = f"{adventurer.name} has just left their home to embark on a journey."
+path = LLM_generation(adventurerHistory, action)
 path = path.strip()
 adventurerHistory.append(path)
 print(path)
 
 while(True):
-    
+    print("> ", end = '')
+    nextAction = input()
+    nextPath = LLM_generation(adventurerHistory, nextAction)
+    nextPath = nextPath.strip()
+    adventurerHistory.append(nextPath)
+    print(nextPath)
+
+    if ("You have died" in nextPath):
+        print(r"""
+              ▄████  ▄▄▄       ███▄ ▄███▓▓█████     ▒█████   ██▒   █▓▓█████  ██▀███  
+             ██▒ ▀█▒▒████▄    ▓██▒▀█▀ ██▒▓█   ▀    ▒██▒  ██▒▓██░   █▒▓█   ▀ ▓██ ▒ ██▒
+            ▒██░▄▄▄░▒██  ▀█▄  ▓██    ▓██░▒███      ▒██░  ██▒ ▓██  █▒░▒███   ▓██ ░▄█ ▒
+            ░▓█  ██▓░██▄▄▄▄██ ▒██    ▒██ ▒▓█  ▄    ▒██   ██░  ▒██ █░░▒▓█  ▄ ▒██▀▀█▄  
+            ░▒▓███▀▒ ▓█   ▓██▒▒██▒   ░██▒░▒████▒   ░ ████▓▒░   ▒▀█░  ░▒████▒░██▓ ▒██▒
+             ░▒   ▒  ▒▒   ▓▒█░░ ▒░   ░  ░░░ ▒░ ░   ░ ▒░▒░▒░    ░ ▐░  ░░ ▒░ ░░ ▒▓ ░▒▓░
+              ░   ░   ▒   ▒▒ ░░  ░      ░ ░ ░  ░     ░ ▒ ▒░    ░ ░░   ░ ░  ░  ░▒ ░ ▒░
+            ░ ░   ░   ░   ▒   ░      ░      ░      ░ ░ ░ ▒       ░░     ░     ░░   ░ 
+                  ░       ░  ░       ░      ░  ░       ░ ░        ░     ░  ░   ░     
+                                                                 ░                   
+        """)
+        break
+    elif ("You have won" in nextPath):
+        print(r"""
+               ___           ___           ___                    ___           ___           ___     
+              /\  \         /\__\         /\  \                  /\  \         /\__\         /\  \    
+              \:\  \       /:/  /        /::\  \                /::\  \       /::|  |       /::\  \   
+               \:\  \     /:/__/        /:/\:\  \              /:/\:\  \     /:|:|  |      /:/\:\  \  
+               /::\  \   /::\  \ ___   /::\~\:\  \            /::\~\:\  \   /:/|:|  |__   /:/  \:\__\ 
+              /:/\:\__\ /:/\:\  /\__\ /:/\:\ \:\__\          /:/\:\ \:\__\ /:/ |:| /\__\ /:/__/ \:|__|
+             /:/  \/__/ \/__\:\/:/  / \:\~\:\ \/__/          \:\~\:\ \/__/ \/__|:|/:/  / \:\  \ /:/  /
+            /:/  /           \::/  /   \:\ \:\__\             \:\ \:\__\       |:/:/  /   \:\  /:/  / 
+            \/__/            /:/  /     \:\ \/__/              \:\ \/__/       |::/  /     \:\/:/  /  
+                            /:/  /       \:\__\                 \:\__\         /:/  /       \::/__/   
+                            \/__/         \/__/                  \/__/         \/__/         ~~       
+        """)
+        break
+    elif ("You have encountered a " in nextPath):
+        if ("goblin" in nextPath):
+            print("battle")
+        elif ("fire drake" in nextPath):
+            print("fight")
+        elif ("ogre" in nextPath):
+            print("attack")
+        elif ("giant spider" in nextPath):
+            print("assault")
+        elif ("shadow mage" in nextPath):
+            print("combat")
+        elif ("elemental dragon" in nextPath):
+            print("defend")
+
+print(r"""
+___________.__                      __                               _____                       .__                  .__                ._.
+\__    ___/|  |__  _____     ____  |  | __  ___.__.  ____   __ __  _/ ____\____ _______  ______  |  |  _____   ___.__.|__|  ____    ____ | |
+  |    |   |  |  \ \__  \   /    \ |  |/ / <   |  | /  _ \ |  |  \ \   __\/  _ \\_  __ \ \____ \ |  |  \__  \ <   |  ||  | /    \  / ___\| |
+  |    |   |   Y  \ / __ \_|   |  \|    <   \___  |(  <_> )|  |  /  |  | (  <_> )|  | \/ |  |_> >|  |__ / __ \_\___  ||  ||   |  \/ /_/  >\|
+  |____|   |___|  /(____  /|___|  /|__|_ \  / ____| \____/ |____/   |__|  \____/ |__|    |   __/ |____/(____  // ____||__||___|  /\___  / __
+                \/      \/      \/      \/  \/                                           |__|               \/ \/              \//_____/  \/
+""")
